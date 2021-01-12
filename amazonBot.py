@@ -72,7 +72,7 @@ def in_stock_check(chromeDriver):
             l.info("Item is in-stock!")
             inStock = True
         elif chromeDriver.find_element_by_id("priceblock_dealprice").text:
-            l.info("Item is in-stock and with a discount!")
+            l.info("Item is in-stock and with a discount! BUY IT")
             inStock = True
         else:
             try:
@@ -92,9 +92,9 @@ def in_stock_check(chromeDriver):
 def seller_check(chromeDriver):
     l.info("Checking shipper...")
     element = chromeDriver.find_element_by_id("merchant-info").text
-    shop = element.lower().find("Venduto e spedito da Amazon.")
+    shop = element.lower().find("venduto e spedito da amazon.")
     if shop == -1:
-        l.warn("Amazon is not the seller/shipper")
+        l.warn(f"Amazon is not the seller/shipper it is: {element.lower()}")
         return False
     else:
         l.info(f"Successfully verified shipper as: {element}")
@@ -111,7 +111,7 @@ def verify_price_within_limit(chromeDriver):
     l.info(f'price of item is:  {price}')
     l.info('limit value is: {}'.format(float(LIMIT_VALUE)))
 
-    if float(price.replace('$', '')) > LIMIT_VALUE:
+    if float(price.replace('€', '').replace(" ","").replace(",",".")) > LIMIT_VALUE:
         l.warn('PRICE IS TOO LARGE.')
         return False
 

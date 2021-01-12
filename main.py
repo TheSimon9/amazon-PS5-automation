@@ -19,7 +19,7 @@ def launch():
     opt.add_argument("--remote-debugging-port=921")
     opt.add_argument("--disable-webgl")
     opt.add_argument("--disable-popup-blocking")
-    browser = webdriver.Chrome('chromedriver', options=opt, desired_capabilities=d)
+    browser = webdriver.Remote("http://127.0.0.1:4444/wd/hub", DesiredCapabilities.CHROME)
     # opt.add_argument("--user-data-dir=selenium") # added this option to use cookies, you may need to perform initial login within Selenium
     browser.implicitly_wait(10)
     browser.set_page_load_timeout(5)
@@ -28,11 +28,8 @@ def launch():
 
 if __name__ == '__main__':
     # Launch selenium
-    try:
-        b = launch()
-        b.get(amazonBot.ITEM_URL)
-    except Exception as inst:
-        logger.error('Failed to open browser: {}'.format(format(inst)))
+    b = launch()
+    b.get(amazonBot.ITEM_URL)
 
     # Item purchasing logic
     try:

@@ -16,9 +16,9 @@ load_dotenv(dotenv_path)
 LOGIN_MAIL = os.environ.get('LOGIN_MAIL', "")
 LOGIN_PASSWORD = os.environ.get('LOGIN_PASSWORD', "")
 
-ITEM_URL = os.environ.get('ITEM_URL', "https://smile.amazon.com/PlayStation-5-Console/dp/B08FC5L3RG")
+ITEM_URL = os.environ.get('ITEM_URL', "https://www.amazon.it/Sony-PlayStation-5/dp/B08KKJ37F7")
 
-CHECKOUT_URL = "https://www.amazon.com/gp/cart/view.html?ref_=nav_cart"
+CHECKOUT_URL = "https://www.amazon.it/gp/cart/view.html?ref_=nav_cart"
 ACCEPT_SHOP = "amazon"
 LIMIT_VALUE = 500.  # Maximum USD for the purchase
 
@@ -71,6 +71,9 @@ def in_stock_check(chromeDriver):
         if chromeDriver.find_element_by_id("priceblock_ourprice").text:
             l.info("Item is in-stock!")
             inStock = True
+        elif chromeDriver.find_element_by_id("priceblock_dealprice").text:
+            l.info("Item is in-stock and with a discount!")
+            inStock = True
         else:
             try:
                 chromeDriver.find_element_by_id("outOfStock")
@@ -88,8 +91,8 @@ def in_stock_check(chromeDriver):
 
 def seller_check(chromeDriver):
     l.info("Checking shipper...")
-    element = chromeDriver.find_element_by_id("tabular-buybox-truncate-0").text
-    shop = element.lower().find(ACCEPT_SHOP)
+    element = chromeDriver.find_element_by_id("merchant-info").text
+    shop = element.lower().find("Venduto e spedito da Amazon.")
     if shop == -1:
         l.warn("Amazon is not the seller/shipper")
         return False
